@@ -13,11 +13,19 @@ dependencies = [
     "uvicorn>=0.34.2",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
+ci = [
+    "mypy>=1.16.0",
+    "pytest>=8.3.5",
+    "ruff>=0.11.12",
+]
 dev = [
     "pre-commit>=4.2.0",
+    "ruff>=0.11.12",
+]
+test = [
+    "mypy>=1.16.0",
     "pytest>=8.3.5",
-    "ruff>=0.11.11",
 ]
 
 # Ruff
