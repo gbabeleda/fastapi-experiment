@@ -1,0 +1,61 @@
+name: Build, Test, and Deploy
+
+on:
+  workflow_dispatch: # For manual trigger
+  # TODO: Activate when infra is setup
+  # push:
+  #   branches: [main]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        run: docker build -t my-fastapi-app:latest .
+
+      - name: Run tests
+        run: docker run --rm my-fastapi-app:latest uv run pytest
+
+  push-image:
+    needs: build-test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker registry
+        run: |
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u ${{ secrets.REGISTRY_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker tag my-fastapi-app:latest ${{ secrets.REGISTRY }}/my-fastapi-app:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY }}/my-fastapi-app:${{ github.sha }}
+
+  deploy:
+    needs: push-image
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to production
+        env:
+          HOST: ${{ vars.PROD_HOST }}
+          USER: ${{ vars.PROD_USER }}
+          IMAGE_TAG: ${{ github.sha }}
+          REGISTRY: ${{ secrets.REGISTRY }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
+            docker login $REGISTRY -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASSWORD }}
+            docker pull $REGISTRY/my-fastapi-app:$IMAGE_TAG
+            docker stop myapp || true && docker rm myapp || true
+            docker run -d --name myapp -p 80:8000 $REGISTRY/my-fastapi-app:$IMAGE_TAG
+          EOF
