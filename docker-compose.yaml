@@ -1,0 +1,27 @@
+services:
+  fastapi:
+    # Build using the Dockerfile in current directory
+    build: .
+    # Maps container port 8000 to host port 8000
+    # Accessed via localholst:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount local code into `/app` directory inside the container for hot reload
+      - .:/app
+    # Set environment vars in container
+    env_file:
+      - .env
+    # Override Dockerfile CMD for development with hot reload
+    command:
+      [
+        "uv",
+        "run",
+        "uvicorn",
+        "main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload",
+      ]

@@ -1,0 +1,30 @@
+# Exclude from image builds
+
+# Generated Code & Build Artifacts
+**/__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual Environments & Secrets
+.venv/
+*.env
+
+# System & Editor
+.vscode/
+**/.DS_Store
+**/.ruff_cache/
+logs/
+*.log
+
+# CI
+.github/
+
+# Version Control
+.git/
+.gitignore
+
+# Infrastructure as code
+infra/
