@@ -5,24 +5,31 @@ description = "Learning FastAPI deployment on AWS with Terraform and Docker"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.16.5",
+    "asyncpg>=0.30.0",
     "fastapi[standard]>=0.118.0",
     "httpx>=0.28.1",
+    "pydantic-settings>=2.11.0",
+    "sqlalchemy[asyncio]>=2.0.43",
 ]
 
 [project.optional-dependencies]
 ci = [
     "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
     "pytest-cov>=7.0.0",
     "ruff>=0.13.3",
 ]
 dev = [
     "pre-commit>=4.3.0",
     "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
     "pytest-cov>=7.0.0",
     "ruff>=0.13.3",
 ]
 test = [
     "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
     "pytest-cov>=7.0.0",
 ]
 
@@ -45,6 +52,7 @@ ignore = [
     "E402", # imports not at top - common in __init__.py
     "F401" # unused imports allowed - often re-exports
 ]
+"src/app/models/*.py" = ["F821"]
 
 
 # Pytest
