@@ -27,11 +27,7 @@ dev = [
     "pytest-cov>=7.0.0",
     "ruff>=0.13.3",
 ]
-test = [
-    "pytest>=8.4.2",
-    "pytest-asyncio>=1.2.0",
-    "pytest-cov>=7.0.0",
-]
+test = ["pytest>=8.4.2", "pytest-asyncio>=1.2.0", "pytest-cov>=7.0.0"]
 
 # Ruff
 [tool.ruff]
@@ -50,9 +46,10 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = [
     "E402", # imports not at top - common in __init__.py
-    "F401" # unused imports allowed - often re-exports
+    "F401", # unused imports allowed - often re-exports
+    "F403", # star imports - used for clean package exports
 ]
-"src/app/models/*.py" = ["F821"]
+"src/app/db/models/*.py" = ["F821"]
 
 
 # Pytest
@@ -60,10 +57,10 @@ ignore = [
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = [
-    "-v",                           # Verbose: show each test name
-    "--strict-markers",             # Fail on typos in @pytest.mark.* decorators
-    "--strict-config",              # Fail on pytest config warnings
-    "--cov=app",                    # Measure coverage for the app package
-    "--cov-report=term-missing",    # Show which lines aren't covered
-    "--cov-report=html",            # Generate htmlcov/index.html for detailed view
+    "-v",                        # Verbose: show each test name
+    "--strict-markers",          # Fail on typos in @pytest.mark.* decorators
+    "--strict-config",           # Fail on pytest config warnings
+    "--cov=app",                 # Measure coverage for the app package
+    "--cov-report=term-missing", # Show which lines aren't covered
+    "--cov-report=html",         # Generate htmlcov/index.html for detailed view
 ]
