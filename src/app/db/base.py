@@ -10,3 +10,8 @@ class Base(DeclarativeBase):
     """
 
     pass
+
+
+# Import all models so they register with Base.metadata
+# This MUST happen after Base is defined
+from app.db.models.ecommerce import *  # noqa: F403, E402
