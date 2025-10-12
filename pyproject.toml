@@ -5,26 +5,23 @@ description = "Learning FastAPI deployment on AWS with Terraform and Docker"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.17.0",
+    "asyncpg>=0.30.0",
     "fastapi[standard]>=0.118.0",
     "httpx>=0.28.1",
+    "pydantic-settings>=2.11.0",
+    "sqlalchemy[asyncio]>=2.0.44",
 ]
 
-[project.optional-dependencies]
-ci = [
-    "pytest>=8.4.2",
-    "pytest-cov>=7.0.0",
-    "ruff>=0.13.3",
-]
+[dependency-groups]
+ci = ["pytest>=8.4.2", "pytest-cov>=7.0.0", "ruff>=0.13.3"]
 dev = [
     "pre-commit>=4.3.0",
     "pytest>=8.4.2",
     "pytest-cov>=7.0.0",
     "ruff>=0.13.3",
 ]
-test = [
-    "pytest>=8.4.2",
-    "pytest-cov>=7.0.0",
-]
+
 
 # Ruff
 [tool.ruff]
@@ -43,7 +40,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = [
     "E402", # imports not at top - common in __init__.py
-    "F401" # unused imports allowed - often re-exports
+    "F401", # unused imports allowed - often re-exports
 ]
 
 
@@ -52,10 +49,10 @@ ignore = [
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = [
-    "-v",                           # Verbose: show each test name
-    "--strict-markers",             # Fail on typos in @pytest.mark.* decorators
-    "--strict-config",              # Fail on pytest config warnings
-    "--cov=app",                    # Measure coverage for the app package
-    "--cov-report=term-missing",    # Show which lines aren't covered
-    "--cov-report=html",            # Generate htmlcov/index.html for detailed view
+    "-v",                        # Verbose: show each test name
+    "--strict-markers",          # Fail on typos in @pytest.mark.* decorators
+    "--strict-config",           # Fail on pytest config warnings
+    "--cov=app",                 # Measure coverage for the app package
+    "--cov-report=term-missing", # Show which lines aren't covered
+    "--cov-report=html",         # Generate htmlcov/index.html for detailed view
 ]
